@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "funlab"
+version = "0.1.0"
+description = ""
+authors = ["R202"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "^1.0.1"
+Flask = "^3.0.3"
+Flask-Login = "^0.6.3"
+mongoengine = "^0.29.0"
+Werkzeug = "^3.0.4"
+flask-me = "^1.0.2"
+Flask-Caching = "^2.3.0"
+Flask-Bcrypt = "^1.0.1"
+Flask-WTF = "^1.2.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+funlab-web = "funlab.cmd.web:main"
