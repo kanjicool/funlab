@@ -14,7 +14,7 @@ from flask import (
 )
 from flask_login import login_user, logout_user, login_required, current_user
 
-from .. import models
+from funlab.models import users
 from .. import oauth2
 from .. import acl
 from .. import forms
@@ -30,7 +30,7 @@ def login():
         print(form.errors)
         return render_template("accounts/login.html", form=form)
 
-    user = models.User.objects(username=form.username.data).first()
+    user = users.User.objects(username=form.username.data).first()
 
     if not user or not user.check_password(form.password.data):
         print(form.errors)
@@ -50,6 +50,26 @@ def login():
         return redirect(next)
 
     return redirect(url_for("site.index"))
+
+
+@module.route("/register", methods=["GET", "POST"])
+def register():
+    form = forms.accounts.RegisterForm()
+    if not form.validate_on_submit():
+        return render_template("accounts/register.html", form=form)
+    user = users.User.objects(username=form.username.data)
+    if user:
+        error_msg = "Username นี้ถูกใช้งานแล้ว"
+        return render_template("accounts/register.html", form=form, error_msg=error_msg)
+    user = users.User.objects(email=form.email.data)
+    if user:
+        error_msg = "Email นี้ถูกใช้งานแล้ว"
+        return render_template("accounts/register.html", form=form, error_msg=error_msg)
+    user = users.User()
+    form.populate_obj(user)
+    user.set_password(form.input_password.data)
+    user.save()
+    return redirect(url_for("accounts.login", messages="success"))
 
 
 @module.route("/login/<name>")
